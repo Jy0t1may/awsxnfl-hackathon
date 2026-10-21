@@ -3,6 +3,8 @@
 > **Interactive Multi-Persona NFL Tracking & Cross-Source Visual Analytics**  
 > Grounded in 100% authentic, standard football metrics across **Next Gen Stats (10Hz Tracking)**, **nflverse (PBP & ID Bridge)**, and **Pro Football Reference (Combine & Seasonal Advanced Stats)**.
 
+Watch the preview : 'Preview Video.mp4' in the source repository
+
 ---
 
 ## 🏆 Key Architectural Updates (v2.0)
