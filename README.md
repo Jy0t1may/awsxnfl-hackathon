@@ -4,8 +4,10 @@
 > Grounded in 100% authentic, standard football metrics across **Next Gen Stats (10Hz Tracking)**, **nflverse (PBP & ID Bridge)**, and **Pro Football Reference (Combine & Seasonal Advanced Stats)**.
 
 [Watch the preview video](./Preview%20Video.mp4)
+View the live deployment at [awsxnfl-hackathon.vercel.app](https://awsxnfl-hackathon.vercel.app/). 
+Deployment done through **Vercel** using our github repo as the source. 
 
----
+
 
 ## Key Architectural Updates (v2.0)
 - **Focused 2-Persona Experience**: Streamlined exclusively for **Coach View** (Schemes, Formations, Defensive Shells, EPA Matrix) and **Recruiter View** (PFR Combine Drills, Positional Percentiles, In-Game Speed vs 40-Time).
