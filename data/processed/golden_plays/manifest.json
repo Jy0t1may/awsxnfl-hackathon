@@ -1,0 +1,44 @@
+[
+  {
+    "id": "play_2032",
+    "gameId": 2021090900,
+    "playId": 2032,
+    "title": "Explosive 47-Yard Deep TD Pass",
+    "category": "explosive_pass",
+    "badge": "Explosive Pass (+4.52 EPA)",
+    "subtitle": "Tom Brady 47-yd deep bomb TD to Antonio Brown (Q2 2:45)",
+    "focusNflId": 35481,
+    "focusPlayerName": "Antonio Brown",
+    "focusJersey": 81,
+    "keyFrame": 41,
+    "description": "(2:45) (No Huddle, Shotgun) T.Brady pass deep right to A.Brown for 47 yards, TOUCHDOWN."
+  },
+  {
+    "id": "play_3110",
+    "gameId": 2021090900,
+    "playId": 3110,
+    "title": "Pre-Snap Motion Scheme",
+    "category": "motion_run",
+    "badge": "Pre-Snap Motion & Target",
+    "subtitle": "Pre-snap jet motion into quick swing pass to Leonard Fournette",
+    "focusNflId": 44850,
+    "focusPlayerName": "Leonard Fournette",
+    "focusJersey": 28,
+    "keyFrame": 35,
+    "description": "(7:12) (Shotgun) T.Brady pass short left to L.Fournette to DAL 11 for 2 yards (M.Parsons)."
+  },
+  {
+    "id": "play_2279",
+    "gameId": 2021090900,
+    "playId": 2279,
+    "title": "Defensive Edge Rush Sack (-12 Yds)",
+    "category": "defensive_sack",
+    "badge": "Defensive Sack (-1.34 EPA)",
+    "subtitle": "Shaquil Barrett speed rush off the edge sacks Dak Prescott for -12 yards",
+    "focusNflId": 41334,
+    "focusPlayerName": "Shaquil Barrett",
+    "focusJersey": 58,
+    "keyFrame": 52,
+    "description": "(1:11) (Shotgun) D.Prescott sacked at TB 33 for -12 yards (S.Barrett)."
+  }
+]
