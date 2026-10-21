@@ -7,3 +7,4 @@ frontend/node_modules/
 frontend/dist/
 data/raw/
 data/processed/*.duckdb*
+nfl-big-data-bowl-regional-event-data/
