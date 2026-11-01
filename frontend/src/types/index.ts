@@ -186,3 +186,99 @@ export interface PlaySummary {
   offenseFormation: string;
   coverage: string;
 }
+
+
+// ==========================================
+// AWS Cybersecurity & Zero-Trust Governance Types
+// ==========================================
+
+export interface CloudTrailEvent {
+  event_id: string;
+  event_time: string;
+  event_source: string;
+  event_name: string;
+  aws_region: string;
+  principal: string;
+  principal_role: string;
+  resource_arn: string;
+  action: string;
+  data_classification: string;
+  decision: string;
+  ip_address: string;
+  user_agent: string;
+  details: string;
+}
+
+export interface SecurityPosture {
+  status: string;
+  aws_region: string;
+  kms: {
+    kms_status: string;
+    mode: string;
+    key_alias: string;
+    key_arn: string;
+    key_spec: string;
+    key_rotation: string;
+    envelope_encryption: {
+      payload_cipher: string;
+      dek_key_size_bits: number;
+      nonce_size_bits: number;
+      tamper_proof: boolean;
+    };
+    compliance_standards: string[];
+  };
+  s3_data_lake: {
+    bucket_prefix: string;
+    sse_algorithm: string;
+    bucket_key_enabled: boolean;
+    public_access_blocked: boolean;
+    tls_transport_enforced: boolean;
+    minimum_tls_version: string;
+    versioning: string;
+    lifecycle_glacier_archive: string;
+  };
+  waf_protection: {
+    web_acl_name: string;
+    scope: string;
+    rate_limit_rule: string;
+    managed_rule_sets: string[];
+    bot_protection: string;
+  };
+  zero_trust_abac: {
+    roles: string[];
+    roles_detail: Record<string, any>;
+    data_classifications: Record<string, any>;
+  };
+}
+
+export interface EncryptedEnvelope {
+  version: string;
+  encryption: {
+    algorithm: string;
+    key_management: string;
+    kms_cmk_arn: string;
+    kms_cmk_alias: string;
+    encrypted_dek_b64: string;
+    nonce_b64: string;
+    data_classification: string;
+    key_rotation_enabled: boolean;
+    tls_enforced: boolean;
+  };
+  meta: {
+    playerId: number;
+    encryptedAt: string;
+    payloadSizeBytes: number;
+    ciphertextSizeBytes: number;
+  };
+  ciphertext: string;
+}
+
+export interface ThreatSimulationResult {
+  status: string;
+  attack_type: string;
+  defense_layer: string;
+  matched_rule: string;
+  action: string;
+  event: CloudTrailEvent;
+  remediation: string;
+}

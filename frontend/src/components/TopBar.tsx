@@ -6,7 +6,8 @@ import {
   Layers,
   Calendar,
   Clock,
-  ChevronDown
+  ChevronDown,
+  ShieldCheck
 } from 'lucide-react';
 import { PersonaMode, GameItem } from '../types';
 
@@ -22,6 +23,7 @@ interface TopBarProps {
   onSelectGame: (gameId: number) => void;
   selectedQuarter: number; // 0 for All, 1..4
   onSelectQuarter: (q: number) => void;
+  onOpenSecurity: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -36,6 +38,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onSelectGame,
   selectedQuarter,
   onSelectQuarter,
+  onOpenSecurity,
 }) => {
   // Available weeks
   const availableWeeks = Array.from(new Set(allGames.map((g) => g.week))).sort((a, b) => a - b);
@@ -143,8 +146,21 @@ export const TopBar: React.FC<TopBarProps> = ({
           </div>
         </div>
 
-        {/* Global Controls: Data Source Toggle */}
+        {/* Global Controls: Data Source Toggle & AWS Cyber Defense */}
         <div className="flex items-center space-x-2">
+          {/* AWS Zero-Trust Cybersecurity Drawer Trigger */}
+          <button
+            onClick={onOpenSecurity}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-950/40 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-900/40 hover:border-emerald-400 transition-all shadow-sm"
+            title="Open AWS Zero-Trust Cryptography & Cloud Security Hub"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="font-mono">AWS Security:</span>
+            <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-emerald-500 text-black font-bold">
+              ZERO-TRUST
+            </span>
+          </button>
+
           <button
             onClick={onToggleSourceBadges}
             className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${

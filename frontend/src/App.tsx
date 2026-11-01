@@ -16,12 +16,14 @@ import { FieldCanvas } from './components/FieldCanvas';
 import { MultiTrackTimeline } from './components/MultiTrackTimeline';
 import { CoachPanel } from './components/CoachPanel';
 import { RecruiterPanel } from './components/RecruiterPanel';
+import { AwsSecurityDrawer } from './components/AwsSecurityDrawer';
 import { Loader2, Info } from 'lucide-react';
 
 export const App: React.FC = () => {
   // Navigation & Mode (Only Coach and Recruiter)
   const [currentPersona, setCurrentPersona] = useState<PersonaMode>('coach');
   const [showSourceBadges, setShowSourceBadges] = useState(true);
+  const [isSecurityOpen, setIsSecurityOpen] = useState(false);
 
   // Match & Play Navigation State
   const [allGames, setAllGames] = useState<GameItem[]>([]);
@@ -199,6 +201,7 @@ export const App: React.FC = () => {
         onSelectGame={handleSelectGame}
         selectedQuarter={selectedQuarter}
         onSelectQuarter={setSelectedQuarter}
+        onOpenSecurity={() => setIsSecurityOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -267,6 +270,13 @@ export const App: React.FC = () => {
           </main>
         )}
       </div>
+
+      {/* AWS Zero-Trust Cybersecurity & Cryptographic Governance Drawer */}
+      <AwsSecurityDrawer
+        isOpen={isSecurityOpen}
+        onClose={() => setIsSecurityOpen(false)}
+        selectedPlayer={bundle?.players.find((p) => p.nflId === selectedPlayerId) || bundle?.players[0] || null}
+      />
 
       {/* Footer */}
       <footer className="border-t border-slate-800 bg-slate-950 px-4 py-2 text-[11px] font-mono text-slate-500 flex flex-wrap items-center justify-between gap-2">

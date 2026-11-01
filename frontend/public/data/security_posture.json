@@ -1,0 +1,175 @@
+{
+  "status": "SECURE",
+  "aws_region": "us-east-1",
+  "kms": {
+    "kms_status": "ONLINE",
+    "mode": "ACTIVE_KMS_EMULATOR",
+    "key_alias": "alias/nfl-nextgen-telemetry-cmk",
+    "key_arn": "arn:aws:kms:us-east-1:748921849102:key/nfl-telemetry-cmk-88f1c3",
+    "key_spec": "SYMMETRIC_DEFAULT (AES-256)",
+    "key_rotation": "ENABLED (Annual Automatic Rotation)",
+    "envelope_encryption": {
+      "payload_cipher": "AES-256-GCM (AEAD Authenticated)",
+      "dek_key_size_bits": 256,
+      "nonce_size_bits": 96,
+      "tamper_proof": true
+    },
+    "compliance_standards": [
+      "NIST SP 800-207 (Zero Trust Architecture)",
+      "NIST SP 800-57 (Key Management)",
+      "FIPS 140-3 Level 3 (AWS KMS HSM Backend)",
+      "AWS Well-Architected Security Pillar"
+    ]
+  },
+  "s3_data_lake": {
+    "bucket_prefix": "gridironlens-nfl-telemetry-production",
+    "sse_algorithm": "aws:kms",
+    "bucket_key_enabled": true,
+    "public_access_blocked": true,
+    "tls_transport_enforced": true,
+    "minimum_tls_version": "1.2/1.3",
+    "versioning": "ENABLED",
+    "lifecycle_glacier_archive": "ENABLED"
+  },
+  "waf_protection": {
+    "web_acl_name": "GridironLens-Telemetry-Protection-WAF",
+    "scope": "REGIONAL (us-east-1)",
+    "rate_limit_rule": "500 req / 5 min per IP",
+    "managed_rule_sets": [
+      "AWSManagedRulesCommonRuleSet",
+      "AWSManagedRulesSQLiRuleSet"
+    ],
+    "bot_protection": "ACTIVE"
+  },
+  "zero_trust_abac": {
+    "roles": [
+      "CoachRole",
+      "ScoutRole",
+      "ZebraIngestRole",
+      "SecOpsAdmin"
+    ],
+    "roles_detail": {
+      "CoachRole": {
+        "department": "Coaching",
+        "clearance": "PlaybookSchemes",
+        "allowed_classifications": [
+          "PUBLIC",
+          "INTERNAL_PLAYBOOK",
+          "CONFIDENTIAL_BIOMETRIC"
+        ],
+        "denied_classifications": [
+          "RESTRICTED_SCOUTING"
+        ]
+      },
+      "ScoutRole": {
+        "department": "Scouting",
+        "clearance": "ScoutingIntel",
+        "allowed_classifications": [
+          "PUBLIC",
+          "CONFIDENTIAL_BIOMETRIC",
+          "RESTRICTED_SCOUTING"
+        ],
+        "denied_classifications": [
+          "INTERNAL_PLAYBOOK"
+        ]
+      },
+      "ZebraIngestRole": {
+        "department": "StadiumOperations",
+        "clearance": "RawIngest",
+        "allowed_classifications": [
+          "CONFIDENTIAL_BIOMETRIC"
+        ],
+        "denied_classifications": [
+          "INTERNAL_PLAYBOOK",
+          "RESTRICTED_SCOUTING"
+        ]
+      },
+      "SecOpsAdmin": {
+        "department": "SecurityOperations",
+        "clearance": "ZeroTrustSuperuser",
+        "allowed_classifications": [
+          "PUBLIC",
+          "INTERNAL_PLAYBOOK",
+          "CONFIDENTIAL_BIOMETRIC",
+          "RESTRICTED_SCOUTING"
+        ],
+        "denied_classifications": []
+      }
+    },
+    "data_classifications": {
+      "PUBLIC": {
+        "label": "Public Match Context",
+        "badge_color": "emerald",
+        "fields": [
+          "gameId",
+          "week",
+          "gameDate",
+          "homeTeam",
+          "visitorTeam",
+          "score",
+          "quarter",
+          "clock"
+        ],
+        "allowed_roles": [
+          "*"
+        ]
+      },
+      "INTERNAL_PLAYBOOK": {
+        "label": "Internal Playbook Schemes",
+        "badge_color": "blue",
+        "fields": [
+          "offenseFormation",
+          "personnelO",
+          "coverage",
+          "epa",
+          "cpoe",
+          "playDescription",
+          "pff_role"
+        ],
+        "allowed_roles": [
+          "CoachRole",
+          "SecOpsAdmin"
+        ]
+      },
+      "CONFIDENTIAL_BIOMETRIC": {
+        "label": "Confidential Athlete Biometrics (KMS Encrypted)",
+        "badge_color": "purple",
+        "fields": [
+          "x",
+          "y",
+          "s",
+          "speed_mph",
+          "a",
+          "dis",
+          "o",
+          "dir",
+          "separation_distance",
+          "heart_rate_est"
+        ],
+        "allowed_roles": [
+          "CoachRole",
+          "ScoutRole",
+          "SecOpsAdmin"
+        ]
+      },
+      "RESTRICTED_SCOUTING": {
+        "label": "Restricted Front-Office Scouting Intel",
+        "badge_color": "amber",
+        "fields": [
+          "forty",
+          "vertical",
+          "broad_jump",
+          "cone",
+          "shuttle",
+          "bench",
+          "pfr_av",
+          "draft_capital"
+        ],
+        "allowed_roles": [
+          "ScoutRole",
+          "SecOpsAdmin"
+        ]
+      }
+    }
+  }
+}

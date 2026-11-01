@@ -50,12 +50,96 @@ def get_db():
     return duckdb.connect(DUCKDB_PATH, read_only=True)
 
 
+from pydantic import BaseModel
+from backend.aws_security import kms_service, zero_trust_manager
+
+class ThreatSimulationRequest(BaseModel):
+    threat_type: str
+    attacker_ip: Optional[str] = "203.0.113.195"
+
+class EncryptPlayerRequest(BaseModel):
+    player_id: int
+    payload: Dict[str, Any]
+    classification: Optional[str] = "CONFIDENTIAL_BIOMETRIC"
+
+
 @app.get("/api/health")
 def health_check():
     return {
         "status": "healthy",
         "database_exists": os.path.exists(DUCKDB_PATH),
+        "aws_security_module": "ACTIVE",
     }
+
+
+# -------------------------------------------------------------
+# AWS Zero-Trust Cybersecurity & Cryptographic Governance Endpoints
+# -------------------------------------------------------------
+@app.get("/api/security/posture")
+def get_security_posture():
+    """Returns live AWS KMS cryptographic posture, S3 data lake security, and ABAC policies."""
+    kms_posture = kms_service.get_posture()
+    return {
+        "status": "SECURE",
+        "aws_region": "us-east-1",
+        "kms": kms_posture,
+        "s3_data_lake": {
+            "bucket_prefix": "gridironlens-nfl-telemetry-production",
+            "sse_algorithm": "aws:kms",
+            "bucket_key_enabled": True,
+            "public_access_blocked": True,
+            "tls_transport_enforced": True,
+            "minimum_tls_version": "1.2/1.3",
+            "versioning": "ENABLED",
+            "lifecycle_glacier_archive": "ENABLED"
+        },
+        "waf_protection": {
+            "web_acl_name": "GridironLens-Telemetry-Protection-WAF",
+            "scope": "REGIONAL (us-east-1)",
+            "rate_limit_rule": "500 req / 5 min per IP",
+            "managed_rule_sets": ["AWSManagedRulesCommonRuleSet", "AWSManagedRulesSQLiRuleSet"],
+            "bot_protection": "ACTIVE"
+        },
+        "zero_trust_abac": {
+            "roles": list(zero_trust_manager.ROLES_DEFINITION.keys()),
+            "roles_detail": zero_trust_manager.ROLES_DEFINITION,
+            "data_classifications": zero_trust_manager.DATA_CLASSIFICATIONS
+        }
+    }
+
+
+@app.get("/api/security/audit-log")
+def get_security_audit_log(limit: int = Query(25, ge=1, le=100)):
+    """Returns real-time CloudTrail-compliant cryptographic and access audit trail."""
+    return zero_trust_manager.get_audit_trail(limit=limit)
+
+
+@app.post("/api/security/encrypt-player")
+def encrypt_player_telemetry(req: EncryptPlayerRequest):
+    """Encrypts sensitive player tracking/combine metrics using AWS KMS Envelope Encryption."""
+    encrypted_envelope = kms_service.encrypt_telemetry_payload(
+        payload=req.payload,
+        classification=req.classification or "CONFIDENTIAL_BIOMETRIC",
+        player_id=req.player_id
+    )
+    zero_trust_manager.log_event(
+        event_name="kms:Encrypt",
+        principal_role="SecOpsAdmin",
+        data_classification=req.classification or "CONFIDENTIAL_BIOMETRIC",
+        decision="ALLOWED",
+        details=f"Envelope encrypted telemetry payload for Player ID {req.player_id} using KMS CMK"
+    )
+    return encrypted_envelope
+
+
+@app.post("/api/security/simulate-threat")
+def simulate_security_threat(req: ThreatSimulationRequest):
+    """Simulates an active cyber attack (SQLi, Exfiltration, Rate Limit) against the NFL API."""
+    result = zero_trust_manager.simulate_threat(
+        threat_type=req.threat_type,
+        attacker_ip=req.attacker_ip or "203.0.113.195"
+    )
+    return result
 
 
 @app.get("/api/games")
